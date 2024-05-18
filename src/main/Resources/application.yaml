@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: spring-name
+
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+
+yaziapi:
+  client:
+    access-key: jiangyanming
+    secret-key: 123456
