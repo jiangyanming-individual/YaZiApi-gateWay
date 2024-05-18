@@ -1,13 +1,25 @@
 spring:
   application:
-    name: spring-name
+    name: spring-cloud gateway
+  cloud:
+    gateway:
+      default-filters: #设置默认过滤器
+        - AddResponseHeader=source, duck
+      routes:
+        - id: path_route
+          uri: http://localhost:8123 # 断言如果成立，就会重定向到localhost:8123
+          predicates:
+            - Path=/api/** # 断言为模糊匹配
 
 server:
-  port: 8123
-  servlet:
-    context-path: /api
+  port: 8090
 
-yaziapi:
-  client:
-    access-key: jiangyanming
-    secret-key: 123456
+
+
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: trace
