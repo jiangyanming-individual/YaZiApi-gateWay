@@ -15,6 +15,12 @@
         <spring-cloud.version>2021.0.5</spring-cloud.version>
     </properties>
     <dependencies>
+
+        <dependency>
+            <groupId>com.jiang</groupId>
+            <artifactId>YaZiApi-common</artifactId>
+            <version>0.0.1</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
@@ -24,6 +30,18 @@
             <artifactId>YaZiApiClient-sdk</artifactId>
             <version>0.0.1</version>
         </dependency>
+<!--        dubbo 和nacos 的依赖配置-->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>3.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+<!--        spring cloud gateway 降级服务-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>

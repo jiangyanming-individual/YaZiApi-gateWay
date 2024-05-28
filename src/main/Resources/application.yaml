@@ -10,12 +10,19 @@ spring:
           uri: http://localhost:8123 # 断言如果成立，就会重定向到localhost:8123
           predicates:
             - Path=/api/** # 断言为模糊匹配
-
 server:
   port: 8090
 
-
-
+#dubbo的配置
+dubbo:
+  application:
+    name: dubbo-springboot-demo-provider
+  protocol:
+    name: dubbo
+    port: -1 # 表示随机分配端口
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848?username=nacos&password=nacos
 
 logging:
   level:
