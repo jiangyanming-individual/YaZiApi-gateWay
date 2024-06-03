@@ -4,7 +4,6 @@ import com.jiang.springbootinit.provider.DemoService;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
@@ -29,7 +28,7 @@ public class Task implements CommandLineRunner {
         System.out.println("Receive result ======> " + result2);
 
         new Thread(()-> {
-            while (true) {
+//            while (true) {
                 try {
                     Thread.sleep(1000);
                     System.out.println(new Date() + " Receive result ======> " + demoService.sayHello("world"));
@@ -37,7 +36,7 @@ public class Task implements CommandLineRunner {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
                 }
-            }
+//            }
         }).start();
     }
 }

@@ -7,6 +7,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>YaZiApi-gateWay</name>
     <description>YaZiApi-gateWay</description>
+
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,16 +16,25 @@
         <spring-cloud.version>2021.0.5</spring-cloud.version>
     </properties>
     <dependencies>
-
+<!--        公共模块-->
         <dependency>
             <groupId>com.jiang</groupId>
             <artifactId>YaZiApi-common</artifactId>
             <version>0.0.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
+
+<!--        客户端sdk-->
         <dependency>
             <groupId>com.jiang</groupId>
             <artifactId>YaZiApiClient-sdk</artifactId>

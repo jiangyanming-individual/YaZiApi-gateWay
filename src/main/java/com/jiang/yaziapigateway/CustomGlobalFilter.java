@@ -1,5 +1,6 @@
 package com.jiang.yaziapigateway;
 
+import cn.hutool.core.lang.func.VoidFunc;
 import com.jiang.apicommon.model.entity.InterfaceInfo;
 import com.jiang.apicommon.model.entity.User;
 import com.jiang.apicommon.service.InnerInterfaceInfoService;
@@ -56,7 +57,9 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
     /***
      * 设置白名单：
      */
-    public static final List<String> IP_WHITE_LIST = Arrays.asList("127.0.0.1");
+    private static final List<String> IP_WHITE_LIST = Arrays.asList("127.0.0.1");
+
+    private static final String INNER_HOST= "http://localhost:8123";
 
     /**
      * filter 调用是一个异步调用：
@@ -70,7 +73,8 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         //1. 用户发送请求到API网关，默认是直接发请求
         // 2. 请求日志
         ServerHttpRequest request = exchange.getRequest();
-        String url = request.getPath().value();
+        String url = INNER_HOST+ request.getPath().value();//拼接的url
+        System.out.println("url:" + url);
         String method = request.getMethod().toString();
         log.info("============================>");
         log.info("请求的id: " +request.getId());
@@ -92,13 +96,13 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         // 4. 用户鉴权（判断ak，sk是否合法）
         HttpHeaders headers = request.getHeaders();
         String accessKey = headers.getFirst("accessKey");
+        System.out.println("accessKey:" + accessKey);
         String body = headers.getFirst("body");
         //从请求头中拿到sign
         String sign = headers.getFirst("sign");
         String nonce = headers.getFirst("nonce");
         String timestamp = headers.getFirst("timestamp");
         System.out.println("body:"+body);
-
         //校验随机数字段
         if (Long.parseLong(nonce) > 10000L){
             //异常处理类
@@ -132,19 +136,22 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         }
         // 5. 请求的模拟接口是否存在
         InterfaceInfo interfaceInfo=null;
+        System.out.println("url:" + url +" " + "method:" + method);
         try {
             interfaceInfo = innerInterfaceInfoService.getInterfaceInfo(url, method);
+            if (interfaceInfo == null){
+                //异常处理类
+                return handleAuth(response);
+            }
         }catch (Exception e){
             log.error("getInterfaceInfo error",e);
         }
-        if (interfaceInfo == null){
-            //异常处理类
-            return handleAuth(response);
-        }
+
         // 6. 请求转发，调用模拟接口
         /**
          * 传入userId, interfaceInfoId
          */
+        System.out.println("interfaceInfoID:" + interfaceInfo.getId() + " "+ "userID:" + invokeUser.getId() );
         return handleResponse(exchange,chain,interfaceInfo.getId(),invokeUser.getId()); //调用自定义响应处理类
 //        // 7. 响应日志
 //        HttpStatus statusCode = response.getStatusCode();
@@ -233,6 +240,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
     public Mono<Void> handleAuth(ServerHttpResponse response){
         //设置响应状态码403没有权限：
         response.setStatusCode(HttpStatus.FORBIDDEN);
+        System.out.println("######come int 错误处理类");
         //完成响应
         return response.setComplete();
     }
